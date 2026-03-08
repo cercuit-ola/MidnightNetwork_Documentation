@@ -710,136 +710,164 @@ console.log('JS commitment (hex):', expectedHex);
 
 # Part 3 — Documentation Strategy and Governance
 
-## Midnight Developer Documentation: Six-Month Strategy
+# Part 3 — Documentation Strategy and Governance
+
+## Midnight Developer Documentation: A Six-Month Proposal
 
 **Author:** Samuel Okediji, Technical Writer
 
 ---
 
+### The Goal
+
+By the end of six months, I want Midnight's documentation to do one thing above everything else: make a developer who has never seen a ZK proof feel capable of shipping their first private smart contract — without filing a support ticket to get there.
+
+That is a specific, measurable goal, and it drives every decision in this proposal. It is not about writing more pages. It is about removing the friction that sits between a developer's first curiosity and their first working contract.
+
+---
+
+### The Roadmap
+
 ```mermaid
 gantt
-    title Documentation Programme — Six-Month Roadmap
+    title Six-Month Documentation Roadmap
     dateFormat  YYYY-MM-DD
-    section Phase 1 · Foundations
-    Documentation audit               :a1, 2025-01-01, 14d
-    Developer interviews (5 sessions) :a2, 2025-01-07, 14d
-    IA proposal published             :a3, after a2,   7d
-    Style guide v1 published          :a4, after a3,   7d
 
-    section Phase 2 · Process
-    GitHub triage system live         :b1, 2025-02-01, 7d
-    Docs sync cadence established     :b2, after b1,   7d
-    Definition of Done updated        :b3, after b2,   7d
-    P1 backlog cleared                :b4, after b3,   21d
+    section Phase 1 · Understand First
+    Full documentation audit               :a1, 2025-01-01, 14d
+    Developer interviews — 5 sessions      :a2, 2025-01-07, 14d
+    Information architecture proposal      :a3, after a2,   7d
+    Style Guide v1 published               :a4, after a3,   7d
 
-    section Phase 3 · Feedback & Metrics
-    Discord monitoring workflow       :c1, 2025-03-15, 14d
-    Quarterly survey launched         :c2, after c1,   7d
-    Metrics dashboard live            :c3, after c2,   14d
-    First quarterly review published  :c4, after c3,   14d
+    section Phase 2 · Build the System
+    GitHub triage workflow live            :b1, 2025-02-01, 7d
+    Weekly Engineering docs sync started   :b2, after b1,   7d
+    Definition of Done updated             :b3, after b2,   7d
+    P1 backlog cleared                     :b4, after b3,   21d
+
+    section Phase 3 · Listen and Improve
+    Discord feedback monitoring live       :c1, 2025-03-15, 14d
+    Quarterly developer survey launched    :c2, after c1,   7d
+    Metrics dashboard published            :c3, after c2,   14d
+    First quarterly impact review          :c4, after c3,   14d
 ```
 
 ---
 
-### Information Architecture and Navigation
+### Phase 1 — Understand Before You Write (Months 1–2)
 
-The current Midnight docs portal (built on Docusaurus) organises content across the right top-level sections — Learn, Build, Nodes, Concepts. The gap is at the **second level**: content types are inconsistently mixed within sections. A concept page, a tutorial, a reference entry, and a troubleshooting guide should never appear as siblings in the same sidebar group.
+The biggest mistake a new technical writer can make is starting to write on day one. Before producing a single new page, I need to understand what already exists, what is broken, and — most importantly — where developers are actually getting stuck.
 
-In Month 1, I would audit every page and classify it against four content types:
+**Week 1–2: The Audit**
 
-| Type | Purpose | Pattern |
+I would read every page of the Midnight docs portal and map each one against the developer journey: first contact with Midnight → first contract → first deployment → first production app. The goal is to find the gaps nobody has named yet. Tutorials that assume too much prior ZK knowledge. Reference pages that exist but are never linked from any guide. Troubleshooting content that does not match the actual error messages developers encounter in the wild.
+
+**Week 2–4: Talk to Developers**
+
+I would run five structured conversations with developers who have already shipped something on Midnight — sourced from Discord, the developer academy, or past hackathon participants. The question is not "how would you rate the docs?" The question is: walk me through the last time you got stuck. What did you search for? What did you eventually find?
+
+Real stories surface real gaps faster than any survey ever will.
+
+By the end of Month 1, I would have a written information architecture proposal and a clear picture of the three or four highest-impact things to fix first. This becomes a shared reference with Engineering and Product — not a document I file and forget, but a living thing we update together.
+
+**Restructuring the Navigation**
+
+The current Midnight portal has the right top-level structure. The gap is at the second level, where concept pages, tutorials, API references, and troubleshooting guides sit as equals in the same sidebar group. A developer who needs a quick answer and a developer building their first mental model need fundamentally different things — and the navigation should make that distinction immediately visible.
+
+I would classify every page into one of four types:
+
+| Type | The developer's question | What it contains |
 |---|---|---|
-| **Concept** | Explains *what* and *why* | No code; mental models, diagrams |
-| **Task** | Explains *how* to do one thing | Numbered steps, working code |
-| **Reference** | Precise technical specification | Tables, parameters, return values |
-| **Troubleshooting** | Diagnoses a known failure | Symptom → Cause → Fix |
+| **Concept** | *What is this and why does it exist?* | Mental models, diagrams, no code |
+| **Task** | *How do I do this specific thing?* | Numbered steps, working code |
+| **Reference** | *What exactly does this parameter do?* | Tables, types, return values, edge cases |
+| **Troubleshooting** | *Why is this broken and how do I fix it?* | Symptom → cause → fix, in that order always |
 
-Each page would carry a visible type badge (as used by Stripe, Vercel, and Cloudflare docs) so developers instantly know what kind of help they're getting before reading.
+Each page would carry a visible content-type label — the same pattern Stripe and Cloudflare use — so a developer knows immediately whether they are in the right place before reading a single word.
 
-Navigation restructuring would also add a **ZK concepts fast path** — a four-page sequence (Commitments → Witnesses → Circuits → Proofs) specifically for developers coming from Solidity or Web2 who need the mental model before code.
-
----
-
-### Documentation Standards and Style Guide
-
-I would publish **Style Guide v1** at the end of Month 1, covering:
-
-- **Voice:** Second person active ("You deploy the contract", not "The contract is deployed"). Present tense always.
-- **Compact terminology glossary:** `ledger`, `circuit`, `witness`, `disclose()`, `persistentHash`, `callTx`, `query` — each defined in plain English with the correct technical meaning and a one-line example.
-- **Code sample standards:** Every code block must be compilable, import-complete, and tested before merging. No placeholder pseudocode in guides — use `// TODO: add your value here` inline annotations instead.
-- **Admonition conventions:** `:::note` for context, `:::warning` for data loss or irreversible actions, `:::danger` for security implications. Used sparingly — maximum two per page.
-- **ZK-specific conventions:** Private data flows always annotated in diagrams. Execution context (on-chain vs local) explicitly labelled in every code block that crosses the boundary.
+I would also add a **ZK concepts fast path**: a focused four-page sequence (Commitments → Witnesses → Circuits → Proofs) designed for developers coming from Solidity or Web2 who need the mental model before they can absorb any code. Right now this path is scattered across the docs. Consolidating it into a linear sequence would cut the most common onboarding confusion significantly.
 
 ---
 
-### Intake, Triage, and Release Alignment
+### Phase 2 — Build the System That Keeps Docs Honest (Months 3–4)
 
-**Intake channels:**
+Good documentation written in isolation becomes outdated the moment Engineering ships the next release. The goal of Phase 2 is to make documentation a first-class part of how Midnight builds — not a catch-up task that happens after features are already out in the world.
 
-- `docs` label on the midnight-docs GitHub repo — engineers and community members file gaps here
-- `#docs-feedback` Discord channel — monitored daily, triaged weekly
-- Engineering sprint planning — I attend the pre-sprint grooming session to identify upcoming features that need documentation coverage
+**The Style Guide**
 
-**Triage model:**
+By the end of Month 1, I would publish Style Guide v1. Not a long document — a short, opinionated one that answers the questions writers and engineers actually argue about:
+
+- **Voice:** Second person, active, present tense. "You deploy the contract" — not "The contract is deployed." This is not a stylistic preference. It is the difference between documentation that feels like an instruction and documentation that feels like a memo.
+- **Compact terminology:** A glossary of `ledger`, `circuit`, `witness`, `callTx`, `query`, `persistentHash` — each defined in one plain-English sentence with a one-line example. ZK terminology is precise and unfamiliar; inconsistent usage erodes developer trust faster than any missing page.
+- **Code standards:** Every code block must be compilable, import-complete, and tested before it merges. No skeleton pseudocode in guides. If a real example is not ready, the page does not ship.
+- **ZK-specific conventions:** Any diagram showing data moving across a privacy boundary must label that boundary explicitly. Any code block that runs locally on the Proof Server — versus on-chain — must say so in a comment. These conventions are how developers learn where their private data actually goes.
+
+**Intake and Triage**
+
+Documentation without an intake process ages instantly. I would establish three channels from day one:
+
+- A `docs` label on the midnight-docs GitHub repo, so engineers and community members can file gaps with a single click
+- A `#docs-feedback` channel in Discord, monitored daily and triaged weekly
+- A standing 30-minute slot in the Engineering pre-sprint grooming session, where I review what is shipping next and identify what needs documentation coverage before it goes out the door
+
+Every incoming item gets a priority:
 
 ```
-P1 — Blocking adoption
-     Missing or incorrect docs on core developer workflows.
-     Resolution: same sprint as the feature.
+P1 — A developer cannot complete a core workflow.
+     Docs are missing or wrong. Ships in the same sprint. No exceptions.
 
-P2 — Developer friction
-     Incomplete examples, gaps in troubleshooting coverage.
-     Resolution: within 2 sprints.
+P2 — A developer can complete the workflow but will get stuck or reach for support.
+     Ships within two sprints.
 
-P3 — Quality and consistency
-     Tone, formatting, depth improvements.
-     Resolution: rolling quarterly batch.
+P3 — The docs work but could be clearer, more consistent, or more complete.
+     Goes into the rolling quarterly improvement batch.
 ```
 
-**Definition of Done addition:**
+**The Definition of Done**
 
-No feature ships without at minimum one of:
-- A merged documentation PR
-- A filed P1 ticket with an owner and a due date within the same sprint
+The most effective change I can make to long-term documentation quality is structural, not editorial: nothing ships without documentation coverage. I would propose adding to Engineering's Definition of Done a simple, clear requirement — every feature either has a merged documentation PR, or has a filed P1 ticket with a named owner and a due date inside the same sprint. This is a hard gate, not a guideline.
 
-This is a hard gate, not a recommendation. I would introduce it with Engineering leads in Month 2 after the audit establishes baseline trust.
+I would not introduce this as a mandate. I would introduce it as a conversation — after the audit has established what the current baseline actually looks like, and after a month or two of showing up reliably in Engineering rituals and building trust with the team.
 
 ---
 
-### Capturing Developer Feedback
+### Phase 3 — Listen Systematically and Measure What Matters (Months 5–6)
 
-| Channel | What it surfaces | Cadence |
+The question is not whether the documentation improved. The question is whether developers are having a better time building on Midnight. Those are different things — and only one of them matters.
+
+**Where the real feedback lives**
+
+| Channel | What it actually tells me | Cadence |
 |---|---|---|
-| **Discord `#developer-support`** | Recurring confusion patterns, undocumented error messages | Weekly review |
-| **GitHub Issues** | Specific inaccuracies, missing API coverage, version drift | Weekly review |
-| **Hackathons** | Real-time observation of where teams get blocked | Each event |
-| **Quarterly survey** | Structured signal on doc quality and gaps (5 questions max) | Quarterly |
-| **Community calls** | Narrative signal — what developers are *saying* about the platform | Monthly |
+| Discord `#developer-support` | Which error messages have no documentation behind them | Weekly |
+| GitHub Issues | Which API surfaces generate consistent confusion | Weekly |
+| Hackathons | Where teams hit walls in real time, unfiltered | Every event |
+| Quarterly survey | Structured signal across the broader community — five questions maximum | Quarterly |
+| Community calls | What developers are saying about the platform, not just rating it | Monthly |
 
-Hackathon observation is particularly valuable for Midnight because ZK concepts have a specific confusion topology — the same three misunderstandings (where does private data go, what does the Proof Server do, why is my state stale) appear in every cohort. Observing them live produces better troubleshooting docs than any survey.
+Hackathons deserve specific attention here. ZK developer confusion has a consistent shape — the same three misunderstandings appear in nearly every cohort that encounters Midnight for the first time: where does private data actually go, what is the Proof Server doing, and why did my transaction fail without a clear error. Watching developers navigate those moments live produces better troubleshooting documentation than any retrospective survey. I would attend every hackathon Midnight runs, with that goal explicitly in mind.
+
+**What success looks like**
+
+These are the signals I would track monthly and share with the team openly:
+
+| Signal | What I am watching for |
+|---|---|
+| Support tickets on documented topics | Decreasing — docs are deflecting the support load |
+| GitHub `docs` issues filed by the community | Decreasing — we are ahead of the gaps |
+| Time on troubleshooting pages | Decreasing — developers find answers faster |
+| Drop-off rate on tutorial pages | Decreasing — fewer developers abandon mid-task |
+| Docs PR cycle time from filing to merge | Decreasing — Engineering and docs are moving together |
+
+And the qualitative questions I would revisit every quarter: Are the same pain points coming up that appeared three months ago? If yes, the fix did not work — go deeper. What did hackathon teams search for that they could not find? That is the next page to write.
 
 ---
 
-### Measuring Documentation Impact
+### What This Adds Up To
 
-**Quantitative signals (tracked monthly in a shared dashboard):**
+Six months from now, I want Midnight's developer documentation to be the thing that sets it apart from every other ZK platform — not the most comprehensive, but the most trustworthy. The kind of docs where a developer finds the answer on the first search, trusts that the code example actually compiles, and leaves understanding exactly what happened and why.
 
-| Metric | Target direction | Why it matters |
-|---|---|---|
-| `#developer-support` tickets on documented topics | ↓ Decreasing | Docs are deflecting support load |
-| GitHub `docs` issues opened | ↓ Decreasing | Fewer gaps found by the community |
-| Time-on-page for troubleshooting docs | ↓ Decreasing | Developers find answers faster |
-| Page exit rate on tutorial pages | ↓ Decreasing | Less abandonment mid-task |
-| Docs PR cycle time (filed → merged) | ↓ Decreasing | Engineering + docs are moving together |
-
-**Qualitative signals (reviewed quarterly):**
-
-- Repeated themes in developer interviews — do the same pain points recur?
-- Hackathon debrief notes — what did teams search for that they couldn't find?
-- Community sentiment in Discord — are developers citing docs positively or negatively?
-
-The goal over six months is a documentation function that Engineering teams treat as a **product asset** — something that ships with features, reduces support costs measurably, and gives Midnight a developer experience advantage over competing ZK platforms.
-
+That is a documentation function that ships alongside features, that the community contributes to because the standard is clear, and that measurably reduces the cost of bringing a new developer from zero to their first deployed contract. That is what I am proposing to build.
 ---
 ---
 
